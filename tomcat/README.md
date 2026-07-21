@@ -1,65 +1,34 @@
 # DockerProject Tomcat
 
-This project builds a Docker image with Apache Tomcat 10.1.54 and deploys a simple Java web application.
+This project builds a Docker image with Apache Tomcat 10.1.54 and deploys a JSP web application backed by a MariaDB database.
 
 ## Files
 - Dockerfile: defines the container image and deploys the Java app
 - index.html: the homepage served by Tomcat
 - loginapp/: contains the JSP-based Java web app
-- docker-compose.yml: optional way to run the container
+- docker-compose.yml: starts Tomcat together with MariaDB
+- init.sql: creates the database table for stored credentials
 
-## Build and run with Docker
-
-```bash
-cd DockerProject/tomcat
-docker build -t dockerproject-tomcat .
-docker run -d -p 8080:8080 --name dockerproject-tomcat dockerproject-tomcat
-```
-
-Open http://localhost:8080 to view the default Tomcat page, or visit http://localhost:8080/loginapp to use the Java application.
-
-## Run with Docker Compose
+## Build and run with Docker Compose
 
 ```bash
 cd DockerProject/tomcat
 docker compose up --build
 ```
 
-To stop it:
+Open http://localhost:8080/loginapp to store a credential and view stored user IDs.
 
-```bash
-docker compose down
-```
+## App behavior
 
-## Java app instructions
-
-The Java app is a simple login demo built with JSP pages.
-
-1. Open http://localhost:8080/loginapp
-2. Use the following credentials:
-   - Username: admin
-   - Password: admin
-3. After submitting the form, the app will show a success message if the credentials are correct.
-
-## Inspect the running container
-
-```bash
-docker exec -it dockerproject-tomcat /bin/bash
-```
-
-Inside the container, you can check the installation with:
-
-```bash
-java -version
-ls /usr/local/tomcat
-./version.sh
-```
+1. Enter a username and password on the main page.
+2. The app stores the credential in MariaDB.
+3. Duplicate usernames are rejected.
+4. A separate page shows all stored user IDs and usernames.
 
 ## Useful commands
 
 ```bash
-docker ps
-docker stop dockerproject-tomcat
-docker rm dockerproject-tomcat
-docker images
+docker compose down
+docker compose logs -f web
+docker compose ps
 ```
