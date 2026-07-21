@@ -9,6 +9,9 @@ public class DbUtil {
         String dbName = System.getenv("DB_NAME");
         String dbUser = System.getenv("DB_USER");
         String dbPassword = System.getenv("DB_PASSWORD");
+        if (dbPassword == null || dbPassword.isEmpty()) {
+            dbPassword = System.getenv("MARIADB_PASSWORD");
+        }
 
         if (dbHost == null || dbHost.isEmpty()) {
             dbHost = "localhost";

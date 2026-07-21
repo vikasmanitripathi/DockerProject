@@ -43,11 +43,38 @@ Once the containers are running:
 
 ## Database details
 
-The MariaDB service uses these default values:
+The MariaDB service uses these values:
 
 - Database: appdb
 - User: appuser
-- Password: apppass
+- Password: supplied through the `MARIADB_PASSWORD` environment variable (default: `apppass`)
+- Root password: supplied through the `MARIADB_ROOT_PASSWORD` environment variable (default: `rootpass`)
+
+## Configure GitHub secrets
+
+To use these values in GitHub Actions or another CI pipeline, add these repository secrets in GitHub:
+
+- `MARIADB_ROOT_PASSWORD`
+- `MARIADB_PASSWORD`
+
+Example GitHub Actions snippet:
+
+```yaml
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Start containers
+        env:
+          MARIADB_ROOT_PASSWORD: ${{ secrets.MARIADB_ROOT_PASSWORD }}
+          MARIADB_PASSWORD: ${{ secrets.MARIADB_PASSWORD }}
+        run: |
+          cd DockerProject/tomcat
+          docker compose up --build -d
+```
+
+For local usage, you can export these variables in your shell or place them in a `.env` file before running Docker Compose.
 
 ## Rebuild the WAR artifact
 
